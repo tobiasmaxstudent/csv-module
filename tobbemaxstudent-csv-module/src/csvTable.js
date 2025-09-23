@@ -1,18 +1,19 @@
 class CsvTable {
-    constructor(csvString) {
+    /**
+     * 
+     * @param {string []} headers
+     * @param {string [][]} rows 
+     */
+    constructor(headers,rows) {
         
-        this.headers = [];
-        this.rows = [];
-        this.parseCsv(csvString);
+    if (!Array.isArray(headers) || !Array.isArray(rows)) {
+        throw new Error('Headers and rows must be arrays')
     }
-    parseCsv(csvString) {
-        const lines = csvString.trim().split('\n');
-        this.headers = lines[0].split(',').map(header => header.trim());
-        for (let i = 1; i < lines.length; i++) {
-            const row = lines[i].split(',').map(cell => cell.trim());
-            this.rows.push(row);
-        }
-    }
+    this.headers = headers.slice()
+    this.rows = rows.map(row => row.slice())
+    this.columnIndex = new Map(this.headers.map((header, index) => [header, index]))
+
+}
     getHeaders() {
         return this.headers;
     }
@@ -26,10 +27,19 @@ class CsvTable {
     getColumnCount() {
         return this.headers.length;
     }
-    getCell(rowIndex, colIndex) {
-        if (rowIndex < 0 || rowIndex >= this.getRowCount() || colIndex < 0 || colIndex >= this.getColumnCount()) {
+    getCell(rowIndex, columnIndex) {
+        if (rowIndex < 0 || rowIndex >= this.getRowCount() || columnIndex < 0 || columnIndex >= this.getColumnCount()) {
             throw new Error('Index out of bounds');
         }
-        return this.rows[rowIndex][colIndex];
+        return this.rows[rowIndex][columnIndex];
     }
+   getColumnIndex(name) {
+    const idx = this.columnIndex.get(name)
+    if (idx === undefined) throw new Error(`Okänd kolumn: ${name}`)
+    return idx
+  }
+  getByHeader(rowIndex, headerName) {
+    return this.getCell(rowIndex, this.getColumnIndex(headerName));
+  }
+  
 }
