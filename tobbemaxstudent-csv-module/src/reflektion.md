@@ -1,0 +1,1 @@
+Bytte namn på quoteChat till charInQuotes, mer passande. 
