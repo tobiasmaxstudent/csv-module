@@ -11,11 +11,27 @@ export class CsvTable {
     if (!Array.isArray(headers) || !Array.isArray(rows)) {
         throw new Error('Headers and rows must be arrays')
     }
+    if (!headers.every(h => typeof h === 'string')) {
+        throw new TypeError('All headers must be strings')
+    }
+    const seen = new Set()
+    for (const h of headers) {
+      if (seen.has(h)) throw new Error(`Duplicate header: ${h}`)
+      seen.add(h)
+    }
     this.headers = headers.slice()
-    this.rows = rows.map(row => row.slice())
+    this.rows = rows.map((row, rIdx) => {
+      if (!Array.isArray(row)) {
+        throw new TypeError(`Row at index ${rIdx} is not an array`)
+      }
+      if (row.length !== headers.length) {
+        throw new Error(`Row ${rIdx} has length ${row.length}, expected ${headers.length}`)
+      }
+      return row.slice()
+    })
     this.columnIndex = new Map(this.headers.map((header, index) => [header, index]))
+  }
 
-}
     getHeaders() {
         return this.headers.slice()
     }
@@ -29,6 +45,9 @@ export class CsvTable {
     getColumnCount() {
         return this.headers.length
     }
+    toArray() {
+        return this.rows.map(row => row.slice())
+    }
     getCell(rowIndex, columnIndex) {
         if (rowIndex < 0 || rowIndex >= this.getRowCount() || columnIndex < 0 || columnIndex >= this.getColumnCount()) {
             throw new Error('Index out of bounds')
@@ -40,11 +59,27 @@ export class CsvTable {
     if (idx === undefined) throw new Error(`Okänd kolumn: ${name}`)
     return idx
   }
+  getCellByHeader(rowIndex, headerName) {
+    return this.getCell(rowIndex, this.getColumnIndex(headerName))
+    }
   getByHeader(rowIndex, headerName) {
     return this.getCell(rowIndex, this.getColumnIndex(headerName))
   }
   
-    static fromCSV(text, {headers = true, ...parserOptions} = {}) {
+  selectColumns(names) {
+    if (!Array.isArray(names) || names.length === 0) {
+        throw new TypeError('Names must be a non-empty array')
+    }
+    const idxs = names.map(name => {
+        const idx = this.columnIndex.get(name)
+        if (idx === undefined) throw new TypeError(`Unknown column: ${name}`)
+        return idx
+    })
+    const newRows = this.rows.map(row => idxs.map(i => row[i]))
+    return new CsvTable(names.slice(), newRows)
+    }
+
+  static fromCSV(text, {headers = true, ...parserOptions} = {}) {
         const rows = parseCSV(text, parserOptions)
         if (headers) {
             const [head = [], ...rest ] = rows
@@ -54,8 +89,28 @@ export class CsvTable {
         const autoHeaders = Array.from({length: width}, (_, i) => `column${i+1}`)
         return new CsvTable(autoHeaders, rows)
     }
+    map(mapper) {
+    if (typeof mapper !== 'function') {
+      throw new TypeError('mapper must be a function');
+    }
+    const out = [];
+    for (let i = 0; i < this.rows.length; i++) {
+      const rowCopy = this.rows[i].slice();
+      const mapped = mapper(rowCopy, i, this);
+      if (!Array.isArray(mapped)) {
+        throw new TypeError('mapper must return an array');
+      }
+      if (mapped.length !== this.headers.length) {
+        throw new Error(
+          `Mapped row length ${mapped.length} does not match headers length ${this.headers.length}`
+        );
+      }
+      out.push(mapped.slice())
+    }
+    return new CsvTable(this.headers.slice(), out)
+  }
+
     toCSV(stringifyOptions) {
   return stringifyCSV([this.getHeaders(), ...this.getRows()], stringifyOptions)
 }
-
 }

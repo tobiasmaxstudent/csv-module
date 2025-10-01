@@ -23,12 +23,13 @@ export function stringifyCSV(data, options = {}) {
     }
 
     const escapeField = (fieldText) => fieldText.replaceAll(charInQuotes, charInQuotes + charInQuotes)
-    const needsQuoting = (fieldText) => alwaysQuote || fieldText.includes(delimiter) || fieldText.includes(charInQuotes) || fieldText.includes('\n') || fieldText.includes('\r')
+    const needsQuoting = (fieldText) => alwaysQuote || fieldText.includes(delimiter) 
+    || fieldText.includes(charInQuotes) || fieldText.includes('\n') || fieldText.includes('\r')
     const rows = data.map(row => {
     return row.map(cell => {
-  const cellText = cell == null ? (nullAsEmpty ? '' : String(cell)) : String(cell);
-  const body = escapeField(cellText);
-  return needsQuoting(cellText) ? charInQuotes + body + charInQuotes : body;
+  const cellText = cell == null ? (nullAsEmpty ? '' : String(cell)) : String(cell)
+  const body = escapeField(cellText)
+  return needsQuoting(cellText) ? charInQuotes + body + charInQuotes : body
 }).join(delimiter)
   })
 
