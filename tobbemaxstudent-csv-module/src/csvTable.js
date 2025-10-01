@@ -1,4 +1,6 @@
-class CsvTable {
+import { parseCSV } from "./parseCSV.js"
+import { stringifyCSV } from "./stringifyCSV.js"
+export class CsvTable {
     /**
      * 
      * @param {string []} headers
@@ -15,23 +17,23 @@ class CsvTable {
 
 }
     getHeaders() {
-        return this.headers;
+        return this.headers.slice()
     }
 
     getRows() {
-        return this.rows;
+        return this.rows.map(row => row.slice())
     }
     getRowCount() {
-        return this.rows.length;
+        return this.rows.length
     }
     getColumnCount() {
-        return this.headers.length;
+        return this.headers.length
     }
     getCell(rowIndex, columnIndex) {
         if (rowIndex < 0 || rowIndex >= this.getRowCount() || columnIndex < 0 || columnIndex >= this.getColumnCount()) {
-            throw new Error('Index out of bounds');
+            throw new Error('Index out of bounds')
         }
-        return this.rows[rowIndex][columnIndex];
+        return this.rows[rowIndex][columnIndex]
     }
    getColumnIndex(name) {
     const idx = this.columnIndex.get(name)
@@ -39,7 +41,21 @@ class CsvTable {
     return idx
   }
   getByHeader(rowIndex, headerName) {
-    return this.getCell(rowIndex, this.getColumnIndex(headerName));
+    return this.getCell(rowIndex, this.getColumnIndex(headerName))
   }
   
+    static fromCSV(text, {headers = true, ...parserOptions} = {}) {
+        const rows = parseCSV(text, parserOptions)
+        if (headers) {
+            const [head = [], ...rest ] = rows
+            return new CsvTable(head, rest)
+        }
+        const width = Math.max(0, ...rows.map(r => r.length))
+        const autoHeaders = Array.from({length: width}, (_, i) => `column${i+1}`)
+        return new CsvTable(autoHeaders, rows)
+    }
+    toCSV(stringifyOptions) {
+  return stringifyCSV([this.getHeaders(), ...this.getRows()], stringifyOptions)
+}
+
 }
