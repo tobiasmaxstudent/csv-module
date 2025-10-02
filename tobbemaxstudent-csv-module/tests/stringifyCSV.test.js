@@ -37,10 +37,9 @@ describe('stringifyCSV', () => {
   })
 
   test('custom delimiter och quoteChar (semicolon + enkelcitat)', () => {
-    const out = stringifyCSV([["Lars' car", 'ok']], { delimiter: '', charInQuotes: "'" })
-   
-    expect(out).toBe("'Lars'' car'ok")
-  })
+  const out = stringifyCSV([["Lars' car", 'ok']], { delimiter: ';', charInQuotes: "'" })
+  expect(out).toBe("'Lars'' car';ok")
+})
 
   test('null/undefined default (nullAsEmpty=false): skrivs som "null"/"undefined"', () => {
     const out = stringifyCSV([[null, undefined]])

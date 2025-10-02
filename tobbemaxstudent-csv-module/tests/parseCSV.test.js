@@ -17,7 +17,7 @@ describe('parseCSV', () => {
   })
 })
 test('sista rad utan newline inkluderas', () => {
-  const input = 'a,b\n1,2\n3,4' // ingen newline sist
+  const input = 'a,b\n1,2\n3,4' 
   expect(parseCSV(input)).toEqual([['a','b'], ['1','2'], ['3','4']])
 })
 
@@ -37,7 +37,7 @@ test('enbart CR (\\r) radslut hanteras', () => {
 })
 
 test('custom delimiter och quoteChar', () => {
-  const input = "ab\r\n'12'3"
-  expect(parseCSV(input, { delimiter: '', charInQuotes: "'" }))
-    .toEqual([['a','b'], ['12','3']])
+  const input = "a;b\r\n'1;2';3"
+  expect(parseCSV(input, { delimiter: ';', charInQuotes: "'" }))
+    .toEqual([['a','b'], ['1;2','3']])
 })

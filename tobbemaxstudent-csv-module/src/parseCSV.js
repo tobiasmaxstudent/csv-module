@@ -61,6 +61,18 @@
 
     const handleOutsideQuotes = (text, i) => {
         const char = text[i]
+        if (field === '' && (char === ' ' || char === '\t')) {
+            let j = i + 1
+            while (j < text.length && (text[j] === ' ' || text[j] === '\t')) {
+                j++
+            }
+                if (text[j] === charInQuotes) {
+                    return i + 1
+                }
+            }
+        if (fieldInQuotes && (char === ' ' || char === '\t')) {
+            return i + 1
+        }
         if (isQuote(char)) {
             inQuotes = true
             fieldInQuotes = true
@@ -92,3 +104,4 @@
     }
         return rows
     }
+

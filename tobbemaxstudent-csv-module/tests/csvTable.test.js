@@ -4,7 +4,6 @@ test('fromCSV med headers', () => {
   const t = CsvTable.fromCSV('id,name\n1,Ada\n2,Linus', { headers: true })
   expect(t.getHeaders()).toEqual(['id','name'])
   expect(t.getRowCount()).toBe(2)
-  expect(t.getByHeader(1, 'name')).toBe('Linus')
 })
 
 test('toCSV roundtrip', () => {

@@ -9,14 +9,14 @@ export class CsvTable {
     constructor(headers,rows) {
         
     if (!Array.isArray(headers) || !Array.isArray(rows)) {
-        throw new Error('Headers and rows must be arrays')
+        throw new TypeError('Headers and rows must be arrays')
     }
     if (!headers.every(h => typeof h === 'string')) {
         throw new TypeError('All headers must be strings')
     }
     const seen = new Set()
     for (const h of headers) {
-      if (seen.has(h)) throw new Error(`Duplicate header: ${h}`)
+      if (seen.has(h)) throw new TypeError(`Duplicate header: ${h}`)
       seen.add(h)
     }
     this.headers = headers.slice()
@@ -25,7 +25,7 @@ export class CsvTable {
         throw new TypeError(`Row at index ${rIdx} is not an array`)
       }
       if (row.length !== headers.length) {
-        throw new Error(`Row ${rIdx} has length ${row.length}, expected ${headers.length}`)
+        throw new TypeError(`Row ${rIdx} has length ${row.length}, expected ${headers.length}`)
       }
       return row.slice()
     })
@@ -39,32 +39,29 @@ export class CsvTable {
     getRows() {
         return this.rows.map(row => row.slice())
     }
+
     getRowCount() {
         return this.rows.length
     }
+
     getColumnCount() {
         return this.headers.length
     }
-    toArray() {
-        return this.rows.map(row => row.slice())
-    }
+   
     getCell(rowIndex, columnIndex) {
         if (rowIndex < 0 || rowIndex >= this.getRowCount() || columnIndex < 0 || columnIndex >= this.getColumnCount()) {
-            throw new Error('Index out of bounds')
+            throw new TypeError('Index out of bounds')
         }
         return this.rows[rowIndex][columnIndex]
     }
    getColumnIndex(name) {
     const idx = this.columnIndex.get(name)
-    if (idx === undefined) throw new Error(`Okänd kolumn: ${name}`)
+    if (idx === undefined) throw new TypeError(`Unknown column: ${name}`)
     return idx
   }
   getCellByHeader(rowIndex, headerName) {
     return this.getCell(rowIndex, this.getColumnIndex(headerName))
     }
-  getByHeader(rowIndex, headerName) {
-    return this.getCell(rowIndex, this.getColumnIndex(headerName))
-  }
   
   selectColumns(names) {
     if (!Array.isArray(names) || names.length === 0) {
@@ -101,7 +98,7 @@ export class CsvTable {
         throw new TypeError('mapper must return an array');
       }
       if (mapped.length !== this.headers.length) {
-        throw new Error(
+        throw new TypeError(
           `Mapped row length ${mapped.length} does not match headers length ${this.headers.length}`
         );
       }
