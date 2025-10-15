@@ -6,15 +6,15 @@ export class CsvTable {
      * @param {string []} headers
      * @param {string [][]} rows 
      */
-    constructor(headers,rows) {
+    constructor(headers,rows) { // Bryt ut felhantering
         
     if (!Array.isArray(headers) || !Array.isArray(rows)) {
-        throw new TypeError('Headers and rows must be arrays')
+        throw new TypeError('Headers and rows must be arrays') //Eventuellt centralisera felhantering
     }
     if (!headers.every(h => typeof h === 'string')) {
         throw new TypeError('All headers must be strings')
     }
-    const seen = new Set()
+    const seen = new Set() //Byt namn på h till header
     for (const h of headers) {
       if (seen.has(h)) throw new TypeError(`Duplicate header: ${h}`)
       seen.add(h)
@@ -25,7 +25,7 @@ export class CsvTable {
         throw new TypeError(`Row at index ${rIdx} is not an array`)
       }
       if (row.length !== headers.length) {
-        throw new TypeError(`Row ${rIdx} has length ${row.length}, expected ${headers.length}`)
+        throw new TypeError(`Row ${rIdx} has length ${row.length}, expected ${headers.length}`) // byt namn på ridx till rowIndex
       }
       return row.slice()
     })
@@ -55,7 +55,7 @@ export class CsvTable {
         return this.rows[rowIndex][columnIndex]
     }
    getColumnIndex(name) {
-    const idx = this.columnIndex.get(name)
+    const idx = this.columnIndex.get(name) // Byt namn på idx till index eller annat
     if (idx === undefined) throw new TypeError(`Unknown column: ${name}`)
     return idx
   }

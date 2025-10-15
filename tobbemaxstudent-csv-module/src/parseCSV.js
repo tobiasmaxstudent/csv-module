@@ -4,9 +4,10 @@
      * @param {*} options - Options for parsing the CSV.
      * @returns {Array<Array<string>>} - The parsed CSV data.
      */
+    GÖR OM TILL EN KLASS
     export function parseCSV(data, options = {}) {
     const delimiter = options.delimiter ?? ','
-    const charInQuotes = options.charInQuotes ?? '"'
+    const charInQuotes = options.charInQuotes ?? '"' 
     const trim = options.trim ?? false
 
     if (typeof delimiter !== 'string' || delimiter.length !== 1) {
@@ -61,13 +62,13 @@
 
     const handleOutsideQuotes = (text, i) => {
         const char = text[i]
-        if (field === '' && (char === ' ' || char === '\t')) {
+        if (field === '' && (char === ' ' || char === '\t')) { //Gör till variable \t
             let j = i + 1
             while (j < text.length && (text[j] === ' ' || text[j] === '\t')) {
                 j++
             }
                 if (text[j] === charInQuotes) {
-                    return i + 1
+                    return i + 1 //Otydligt vad i är
                 }
             }
         if (fieldInQuotes && (char === ' ' || char === '\t')) {

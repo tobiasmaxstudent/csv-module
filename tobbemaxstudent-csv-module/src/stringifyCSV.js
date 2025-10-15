@@ -1,6 +1,7 @@
 /**
  * Stringifies the array
  */
+GÖR OM TTILL EN KLASS
 export function stringifyCSV(data, options = {}) {
     const delimiter = options.delimiter ?? ','
     const charInQuotes = options.charInQuotes ?? '"'
