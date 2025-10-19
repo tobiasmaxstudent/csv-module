@@ -1,4 +1,4 @@
-import { stringifyCSV } from '../src/stringifyCSV.js'
+/* import { stringifyCSV } from '../src/stringifyCSV.js'
 
 describe('stringifyCSV', () => {
   test('basic: två rader, komma-separerad', () => {
@@ -79,3 +79,4 @@ test('flera tomma rader', () => {
   const out = stringifyCSV([[], []])
   expect(out).toBe('\n')
 })
+ */

@@ -13,20 +13,21 @@ export class CSVFormat {
         this.trimOutsideQuotes = options.trimOutsideQuotes ?? false
         this.#validateSingleChar('Delimiter', this.delimiter)
         this.#validateSingleChar('Quote character', this.quote)
-        this.#validateNewline('New line', this.newline)
+        this.#validateNewline(this.newline)
         this.#checkDelimiterIsNotQuote()
     }
-
+    
     #validateSingleChar(name, value) {
         if (typeof value !== 'string' || value.length !== 1) {
             throw new TypeError(`${name} must be a single character string`)
         }
     }
-    #validateNewline(name, value) {
-        if (value !== '\n' && value !== '\r\n') {
-            throw new TypeError(`${name} must be either \\n or \\r\\n`)
+    #validateNewline(newline) {
+        const validNewlines = ['\n', '\r\n',]     
+        if (!validNewlines.includes(newline)) {
+            throw new TypeError("New line must be either \\n or \\r\\n")
         }
-}
+    }
     #checkDelimiterIsNotQuote() {
         if (this.delimiter === this.quote) {
             throw new TypeError('Delimiter and quote character cannot be the same')
