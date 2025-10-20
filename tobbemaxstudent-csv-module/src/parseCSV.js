@@ -8,13 +8,24 @@ export class CsvParser {
             this.format = new CSVFormat(format);
         }
     }
+    #checkTypeOfDelimeter(firstLine) {
+        const comma = (firstLine.match(/,/g) || []).length
+        const semicolon = (firstLine.match(/;/g) || []).length
+        if (semicolon > comma) return ';'
+        else if (comma > semicolon) return ','
+    }
     parseData(data) {
-        if(!data) {
+        if (!data) {
             return []
         }
-        const bom = String(data.replace(/^\uFEFF/, ""))
-        const delimiter = this.format.delimiter
+        const bom = String(data).replace(/^\uFEFF/, "")
         const lines = bom.split(/\r\n|\n|\r/)
+
+        let delimiter = this.format.delimiter
+        const detectedDelimiter = this.#checkTypeOfDelimeter(lines[0])
+        if (detectedDelimiter && detectedDelimiter !== delimiter) {
+            delimiter = detectedDelimiter
+        }
         return lines.map(line => line.split(delimiter).map(cell => cell.trim()))
     }
 }

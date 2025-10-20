@@ -15,11 +15,18 @@ export class CSVFormat {
         this.#validateSingleChar('Quote character', this.quote)
         this.#validateNewline(this.newline)
         this.#checkDelimiterIsNotQuote()
+        this.#validateDelimiter(this.delimiter)
     }
     
     #validateSingleChar(name, value) {
         if (typeof value !== 'string' || value.length !== 1) {
             throw new TypeError(`${name} must be a single character string`)
+        }
+    }
+    #validateDelimiter(delimiter){
+        const validDelimiter = [';', ',']
+        if (!validDelimiter.includes(delimiter)){
+            throw new TypeError("The delimiter must be a , or ;")
         }
     }
     #validateNewline(newline) {
