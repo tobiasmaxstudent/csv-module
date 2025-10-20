@@ -18,3 +18,15 @@ test('Test parse with ; as delimiter', () => {
   ]
     expect(new CsvParser().parseData(csvString)).toEqual(expectedOutput)
 })
+test('handles Windows newlines \\r\\n', () => {
+  const csv = 'a,b\r\n1,2\r\n3,4'
+  expect(new CsvParser().parseData(csv)).toEqual([['a','b'], ['1','2'], ['3','4']])
+})
+test('rows can have different lengths (no strict width)', () => {
+  const csv = 'a,b,c\n1,2\n3,4,5,6'
+  expect(new CsvParser().parseData(csv)).toEqual([
+    ['a','b','c'],
+    ['1','2'],
+    ['3','4','5','6']
+  ])
+})

@@ -11,6 +11,7 @@ export class CSVFormat {
         this.trailingNewline = options.trailingNewline ?? false
         this.nullAsEmpty = options.nullAsEmpty ?? false
         this.trimOutsideQuotes = options.trimOutsideQuotes ?? false
+        this.trimCells = options.trimCells ?? true
         this.#validateSingleChar('Delimiter', this.delimiter)
         this.#validateSingleChar('Quote character', this.quote)
         this.#validateNewline(this.newline)

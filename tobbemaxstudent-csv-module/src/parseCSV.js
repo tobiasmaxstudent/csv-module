@@ -8,7 +8,7 @@ export class CsvParser {
             this.format = new CSVFormat(format);
         }
     }
-    #checkTypeOfDelimeter(firstLine) {
+    #detectDelimiter(firstLine) {
         const comma = (firstLine.match(/,/g) || []).length
         const semicolon = (firstLine.match(/;/g) || []).length
         if (semicolon > comma) return ';'
@@ -18,15 +18,21 @@ export class CsvParser {
         if (!data) {
             return []
         }
-        const bom = String(data).replace(/^\uFEFF/, "")
-        const lines = bom.split(/\r\n|\n|\r/)
+        const text = String(data).replace(/^\uFEFF/, "")
+        const lines = text.split(/\r\n|\n|\r/)
 
-        let delimiter = this.format.delimiter
-        const detectedDelimiter = this.#checkTypeOfDelimeter(lines[0])
-        if (detectedDelimiter && detectedDelimiter !== delimiter) {
-            delimiter = detectedDelimiter
+        const delimiter = this.#detectDelimiter(lines[0])
+        const trim = this.format.trimCells
+        const rows = []
+        for (const line of lines) {
+            if (line === '') {
+                rows.push([])
+                continue
+            }
+            const cells = line.split(delimiter)
+            rows.push(trim ? cells.map(cell => cell.trim()) : cells)
         }
-        return lines.map(line => line.split(delimiter).map(cell => cell.trim()))
+        return rows
     }
 }
 
