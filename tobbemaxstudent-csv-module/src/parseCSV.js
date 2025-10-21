@@ -2,17 +2,14 @@ import { CSVFormat } from "./csvFormat"
 
 export class CsvParser {
     constructor(format) {
-        if (format instanceof CSVFormat) {
-            this.format = format;
-        } else {
-            this.format = new CSVFormat(format);
-        }
+        this.format = format instanceof CSVFormat ? format : new CSVFormat(format)
     }
     #detectDelimiter(firstLine) {
         const comma = (firstLine.match(/,/g) || []).length
         const semicolon = (firstLine.match(/;/g) || []).length
         if (semicolon > comma) return ';'
-        else if (comma > semicolon) return ','
+        if (comma > semicolon) return ','
+        return this.format.delimiter
     }
     parseData(data) {
         if (!data) {
