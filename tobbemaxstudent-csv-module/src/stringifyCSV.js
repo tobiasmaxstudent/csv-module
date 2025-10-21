@@ -1,7 +1,16 @@
 /**
  * Stringifies the array
  */
-GÖR OM TTILL EN KLASS
+export class CSVStringifier {
+    constructor(format) {
+        if (format instanceof CSVFormat) {
+            this.format = format;
+        } else {
+            this.format = new CSVFormat(format);
+        }
+        
+
+/* GÖR OM TTILL EN KLASS
 export function stringifyCSV(data, options = {}) {
     const delimiter = options.delimiter ?? ','
     const charInQuotes = options.charInQuotes ?? '"'
@@ -36,4 +45,4 @@ export function stringifyCSV(data, options = {}) {
 
   const out = rows.join(newLine)
   return trailingNewLine ? out + newLine : out
-}
+} */

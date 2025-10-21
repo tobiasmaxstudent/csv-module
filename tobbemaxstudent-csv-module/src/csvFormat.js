@@ -17,6 +17,12 @@ export class CSVFormat {
         this.#validateNewline(this.newline)
         this.#checkDelimiterIsNotQuote()
         this.#validateDelimiter(this.delimiter)
+
+        this.#validateBooleanOption('alwaysQuote', this.alwaysQuote)
+        this.#validateBooleanOption('trailingNewline', this.trailingNewline)
+        this.#validateBooleanOption('nullAsEmpty', this.nullAsEmpty)
+        this.#validateBooleanOption('trimOutsideQuotes', this.trimOutsideQuotes)
+        this.#validateBooleanOption('trimCells', this.trimCells)
     }
     
     #validateSingleChar(name, value) {
@@ -39,6 +45,11 @@ export class CSVFormat {
     #checkDelimiterIsNotQuote() {
         if (this.delimiter === this.quote) {
             throw new TypeError('Delimiter and quote character cannot be the same')
+        }
+    }
+    #validateBooleanOption(name, value) {
+        if (typeof value !== 'boolean') {
+            throw new TypeError(`${name} must be a boolean`)
         }
     }
 }
