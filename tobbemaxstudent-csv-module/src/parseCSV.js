@@ -9,7 +9,7 @@ export class CsvParser {
         const semicolon = (firstLine.match(/;/g) || []).length
         if (semicolon > comma) return ';'
         if (comma > semicolon) return ','
-        
+
     }
     parseData(data) {
         if (!data) {
@@ -32,4 +32,3 @@ export class CsvParser {
         return rows
     }
 }
-

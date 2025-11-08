@@ -1,4 +1,5 @@
 import { CsvParser } from "./parseCSV.js"
+import { Validator } from "./validator.js"
 export class CsvTable {
   /**
    * 
@@ -6,40 +7,14 @@ export class CsvTable {
    * @param {string [][]} rows 
    */
   constructor(headers, rows) {
-    this.#assertIfArraysAreValid(headers, 'Headers must be an array')
-    this.#assertIfArraysAreValid(rows, 'Rows must be an array of arrays')
-    if (!headers.every(header => typeof header === 'string')) {
-      throw new TypeError('All headers must be strings')
-    }
-    this.#checkDuplicateHeaders(headers)
-    const rowLength = headers.length
-    const rowsCopy = rows.map((row, rowIndex) => {
-      this.#assertIfArraysAreValid(row, `Row at index ${rowIndex} is not an array`)
-      if (row.length !== rowLength) {
-        throw new TypeError(`Row ${rowIndex} has length ${row.length}, expected ${rowLength}`)
-      }
-      return row.slice()
-    })
+    const validator = new Validator()
+    const { headersCopy, rowsCopy } = validator.validateTableInput(headers, rows)
 
-    this.headers = headers.slice()
+    this.headers = headersCopy
     this.rows = rowsCopy
     this.columnIndex = this.#buildColumnIndex(this.headers)
   }
 
-  #checkDuplicateHeaders(headers) {
-    const seen = new Set()
-    for (const header of headers) {
-      if (seen.has(header)) throw new TypeError(`Duplicate header: ${header}`)
-      seen.add(header)
-    }
-  }
-
-
-  #assertIfArraysAreValid(array, errorMessage) {
-    if (!Array.isArray(array)) {
-      throw new TypeError(errorMessage)
-    }
-  }
   #buildColumnIndex(headers) {
     return new Map(headers.map((header, index) => [header, index]))
   }

@@ -4,25 +4,45 @@
  */
 export class CSVFormat {
     constructor(options = {}) {
-        this.delimiter = options.delimiter ?? ','
-        this.quote = options.quote ?? '"'
-        this.newline = options.newline ?? '\n'
-        this.alwaysQuote = options.alwaysQuote ?? false
-        this.trailingNewline = options.trailingNewline ?? false
-        this.nullAsEmpty = options.nullAsEmpty ?? false
-        this.trimOutsideQuotes = options.trimOutsideQuotes ?? false
-        this.trimCells = options.trimCells ?? true
-        this.#validateSingleChar('Delimiter', this.delimiter)
-        this.#validateSingleChar('Quote character', this.quote)
-        this.#validateNewline(this.newline)
-        this.#checkDelimiterIsNotQuote()
-        this.#validateDelimiter(this.delimiter)
-
-        this.#validateBooleanOption('alwaysQuote', this.alwaysQuote)
-        this.#validateBooleanOption('trailingNewline', this.trailingNewline)
-        this.#validateBooleanOption('nullAsEmpty', this.nullAsEmpty)
-        this.#validateBooleanOption('trimOutsideQuotes', this.trimOutsideQuotes)
-        this.#validateBooleanOption('trimCells', this.trimCells)
+        const config = this.#createDefaultConfig(options)
+        this.#validateConfig(config)
+        this.#applyConfig(config)
+    }
+    #createDefaultConfig(options) {
+        return {
+            delimiter: options.delimiter ?? ',',
+            quote: options.quote ?? '"',
+            newline: options.newline ?? '\n',
+            alwaysQuote: options.alwaysQuote ?? false,
+            trailingNewline: options.trailingNewline ?? false,
+            nullAsEmpty: options.nullAsEmpty ?? false,
+            trimOutsideQuotes: options.trimOutsideQuotes ?? false,
+            trimCells: options.trimCells ?? false,
+        }
+    }
+    #validateConfig(config) {
+        this.#validateSingleChar('Delimiter', config.delimiter)
+        this.#validateSingleChar('Quote character', config.quote)
+        this.#validateNewline(config.newline)
+        this.#validateDelimiter(config.delimiter)
+        this.#validateDelimiterNotQuote(config.delimiter, config.quote)
+        this.#validateBooleans(config)
+    }
+     #applyConfig(config) {
+        Object.assign(this, config)
+    }
+    #validateBooleans(config) {
+        const booleanFields = ['alwaysQuote', 'trailingNewline', 'nullAsEmpty', 
+                               'trimOutsideQuotes', 'trimCells']
+        for (const field of booleanFields) {
+            this.#validateBooleanOption(field, config[field])
+        }
+    }
+    
+    #validateDelimiterNotQuote(delimiter, quote) {
+        if (delimiter === quote) {
+            throw new TypeError('Delimiter and quote character cannot be the same')
+        }
     }
     
     #validateSingleChar(name, value) {
@@ -30,23 +50,20 @@ export class CSVFormat {
             throw new TypeError(`${name} must be a single character string`)
         }
     }
-    #validateDelimiter(delimiter){
+    
+    #validateDelimiter(delimiter) {
         const validDelimiter = [';', ',']
-        if (!validDelimiter.includes(delimiter)){
+        if (!validDelimiter.includes(delimiter)) {
             throw new TypeError("The delimiter must be a , or ;")
         }
     }
     #validateNewline(newline) {
-        const validNewlines = ['\n', '\r\n',]     
+        const validNewlines = ['\n', '\r\n',]
         if (!validNewlines.includes(newline)) {
             throw new TypeError("New line must be either \\n or \\r\\n")
         }
     }
-    #checkDelimiterIsNotQuote() {
-        if (this.delimiter === this.quote) {
-            throw new TypeError('Delimiter and quote character cannot be the same')
-        }
-    }
+   
     #validateBooleanOption(name, value) {
         if (typeof value !== 'boolean') {
             throw new TypeError(`${name} must be a boolean`)
