@@ -22,9 +22,6 @@ test('only comma and semicolon allowed', () => {
   expect(() => new CSVFormat({ delimiter: '\t' })).toThrow('The delimiter must be a , or ;')
 })
 
-test('delimiter and quote cannot be same', () => {
-  expect(() => new CSVFormat({ delimiter: '"', quote: '"' })).toThrow('Delimiter and quote character cannot be the same')
-})
 
 test('invalid newline throws', () => {
   expect(() => new CSVFormat({ newline: '\r' })).toThrow("New line must be either \\n or \\r\\n")

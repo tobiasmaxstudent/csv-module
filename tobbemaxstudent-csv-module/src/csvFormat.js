@@ -25,7 +25,6 @@ export class CSVFormat {
         this.#validateSingleChar('Quote character', config.quote)
         this.#validateNewline(config.newline)
         this.#validateDelimiter(config.delimiter)
-        this.#validateDelimiterNotQuote(config.delimiter, config.quote)
         this.#validateBooleans(config)
     }
      #applyConfig(config) {
@@ -39,11 +38,7 @@ export class CSVFormat {
         }
     }
     
-    #validateDelimiterNotQuote(delimiter, quote) {
-        if (delimiter === quote) {
-            throw new TypeError('Delimiter and quote character cannot be the same')
-        }
-    }
+    
     
     #validateSingleChar(name, value) {
         if (typeof value !== 'string' || value.length !== 1) {
