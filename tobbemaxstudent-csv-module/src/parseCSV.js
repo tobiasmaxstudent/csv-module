@@ -1,16 +1,21 @@
-import { CSVFormat } from "./csvFormat"
+import { CSVFormat } from "./csvFormat.js";
 
 export class CsvParser {
     constructor(format) {
-        this.format = format instanceof CSVFormat ? format : new CSVFormat(format)
-    }
+        if (format === undefined) {
+            this.format = new CSVFormat()
+            this.autoDetectDelimiter = true
+        } else {
+            this.format = format instanceof CSVFormat ? format : new CSVFormat(format)
+            this.autoDetectDelimiter = false
+        }
+}
     #detectDelimiter(firstLine) {
         const comma = (firstLine.match(/,/g) || []).length
         const semicolon = (firstLine.match(/;/g) || []).length
-        if (semicolon > comma) return ';'
-        if (comma > semicolon) return ','
-
+        return semicolon > comma ? ';' : ','
     }
+
     parseData(data) {
         if (!data) {
             return []
@@ -18,7 +23,7 @@ export class CsvParser {
         const text = String(data).replace(/^\uFEFF/, "")
         const lines = text.split(/\r\n|\n|\r/)
 
-        const delimiter = this.#detectDelimiter(lines[0])
+        const delimiter = this.autoDetectDelimiter ? this.#detectDelimiter(lines[0]) : this.format.delimiter
         const trim = this.format.trimCells
         const rows = []
         for (const line of lines) {

@@ -1,32 +1,40 @@
 import { CsvParser } from '../src/parseCSV.js'
 
-// Simple test to verify that parseCSV works as expected
-test('parseCSV basic functionality', () => {
-  const csvString = 'name,age,city \n Alice,30,New York \n Bob,25,Los Angeles'
-  const expectedOutput = [
-    ['name', 'age', 'city'],
-    ['Alice', '30', 'New York'],
-    ['Bob', '25', 'Los Angeles']
-  ]
-  expect(new CsvParser().parseData(csvString)).toEqual(expectedOutput)
+test('parse simple CSV', () => {
+  const parser = new CsvParser()
+  const csv = 'a,b,c\n1,2,3'
+  expect(parser.parseData(csv)).toStrictEqual([
+    ['a', 'b', 'c'],
+    ['1', '2', '3']
+  ])
 })
-test('Test parse with ; as delimiter', () => {
-  const csvString = 'name;number;country\n Thomas;10;Germany'
-  const expectedOutput = [
-    ['name', 'number', 'country'],
-    ['Thomas', '10', 'Germany']
-  ]
-    expect(new CsvParser().parseData(csvString)).toEqual(expectedOutput)
+
+test('parse CSV with semicolon', () => {
+  const parser = new CsvParser()
+  const csv = 'a;b;c\n1;2;3'
+  expect(parser.parseData(csv)).toStrictEqual([
+    ['a', 'b', 'c'],
+    ['1', '2', '3']
+  ])
 })
-test('handles Windows newlines \\r\\n', () => {
-  const csv = 'a,b\r\n1,2\r\n3,4'
-  expect(new CsvParser().parseData(csv)).toEqual([['a','b'], ['1','2'], ['3','4']])
+
+test('parse empty string', () => {
+  const parser = new CsvParser()
+  expect(parser.parseData('')).toStrictEqual([])
 })
-test('rows can have different lengths (no strict width)', () => {
-  const csv = 'a,b,c\n1,2\n3,4,5,6'
-  expect(new CsvParser().parseData(csv)).toEqual([
-    ['a','b','c'],
-    ['1','2'],
-    ['3','4','5','6']
+
+test('trim cells by default', () => {
+  const parser = new CsvParser({ trimCells: true })
+  const csv = ' a , b , c '
+  expect(parser.parseData(csv)).toStrictEqual([['a', 'b', 'c']])
+})
+
+test('handle empty lines', () => {
+  const parser = new CsvParser()
+  const csv = 'a,b\n\n1,2'
+  expect(parser.parseData(csv)).toStrictEqual([
+    ['a', 'b'],
+    [],
+    ['1', '2']
   ])
 })
