@@ -3,6 +3,19 @@
  * Delimiter, the character used to separate fields (default is comma).
  */
 export class CSVFormat {
+    /**
+     * Creates a new CSVFormat instance with specified or default configuration.
+     * @param {Object} options - Configuration options.
+     * @param {string} [options.delimiter=','] - Field separator (',' or ';').
+     * @param {string} [options.quote='"'] - Quote character for escaping.
+     * @param {string} [options.newline='\n'] - Line terminator ('\n' or '\r\n').
+     * @param {boolean} [options.alwaysQuote=false] - Always quote all fields.
+     * @param {boolean} [options.trailingNewline=false] - Add newline at end of file.
+     * @param {boolean} [options.nullAsEmpty=false] - Treat null as empty string.
+     * @param {boolean} [options.trimOutsideQuotes=false] - Trim whitespace outside quotes.
+     * @param {boolean} [options.trimCells=false] - Trim whitespace from all cells.
+     * @throws {TypeError} If delimiter or newline are invalid, or if options are wrong type.
+     */
     constructor(options = {}) {
         const config = this.#createDefaultConfig(options)
         this.#validateConfig(config)

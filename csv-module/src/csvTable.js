@@ -2,9 +2,10 @@ import { CsvParser } from "./parseCSV.js"
 import { Validator } from "./validator.js"
 export class CsvTable {
   /**
-   * 
-   * @param {string []} headers
-   * @param {string [][]} rows 
+   * Create a CsvTable instance.
+   * @param {string []} headers - Array of column headers
+   * @param {string [][]} rows - Array of rows, each row is an array of strings
+   * @throws {TypeError} - If headers or rows are invalid
    */
   constructor(headers, rows) {
     const validator = new Validator()

@@ -24,6 +24,8 @@ Min reflektion av kapitel 2 i Clean Code är att boken simplifierar aspekten nam
 ### Reflektion kapitel 3
 Även i kapitel tre tycker jag boken ger bra och konkreta regler att förhålla sig gällande funktioner och metoder. I min modul har jag försökt att fokusera på att ha mindre funktioner och vara noga med single responsability principen vilket jag tycker till stor del jag lyckats med dock med några undantag. I det stora hela tycker jag boken förklarar och knyter samman koncepten på ett bra sätt, jag kommer absolut ta med mig principerna som Do One Thing, Function Argument och Small functions då jag upptäckt hur mycket lättare det är att följa sin egen kod och sina egna tankar kring problemlösningen om jag bryter ner ansvare i mindre delar av koden. 
 
-
-
-
+### Reflektion
+I den här uppgiften har jag lärt mig flera principer gällande kodkvalitet och fått en djupare förståelse för hur bokens principer faktiskt hjälper en att skriva bra kod. 
+De principer från boken jag tycker varit mest värdefulla att använda mig av är Single Responsibility för att hålla koden lättförstålig och mindre netslad, principen Small för att verkligen kunna se fördelarna med att ha korta funktioner och metoder med eget ansvar gör koden lättare att förstå och underhålla. Om jag skulle jämföra längden på mina metoder i denna uppgiften från tidiga commits till sena skulle jag nog säga att min längsta funktion haft över 30 rader kod och gjort upp till 4 saker men efter att ha brutit ned detta med principerna som SRP och One Level of Abstraction per Function är det lätt att dela upp ansvaret till mindre funktioner.
+Ett konkret exempel är funktionen parseData i CSVParser klassen där jag fortfarande bryter mot dessa principer och har därför haft svårigheter att testa just den metoden för den anledningen. 
+Avslutningsvis så har jag fått med mig många bra verktyg från boken som jag kommer att använda mig av i framtiden. Principer som bra namngivning för att inte behöva onödiga kommentarer i koden och principerna om små och separata ansvar till respektive funktion är något jag kommer ta med mig till nästa uppgift.  
